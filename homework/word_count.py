@@ -4,6 +4,10 @@
 
 # pylint: disable=broad-exception-raised
 
+# pylint: disable=broad-exception-raised
+
+# pylint: disable=broad-exception-raised
+
 import fileinput
 import glob
 import os
@@ -27,7 +31,10 @@ def copy_raw_files_to_input_folder(n):
 
     for i in range(n):
         for f in raw_files:
-            shutil.copy(f, os.path.join(input_folder, f"copy_{i}_{os.path.basename(f)}"))
+            shutil.copy(
+                f,
+                os.path.join(input_folder, f"copy_{i}_{os.path.basename(f)}"),
+            )
 
 
 def load_input(input_directory):
@@ -101,12 +108,10 @@ def run_job(input_directory, output_directory):
 
 if __name__ == "__main__":
 
-    copy_raw_files_to_input_folder(n=5)  # cuidado con 1000, genera MUCHOS archivos
-
+    copy_raw_files_to_input_folder(n=1000)  
     start_time = time.time()
 
     run_job("files/input", "files/output")
 
     end_time = time.time()
     print(f"Tiempo de ejecución: {end_time - start_time:.2f} segundos")
-
