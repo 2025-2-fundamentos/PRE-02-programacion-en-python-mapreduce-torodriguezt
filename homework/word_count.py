@@ -69,9 +69,11 @@ def create_directory(directory):
 
 def save_output(output_directory, sequence):
     """Save results to a file"""
-    with open(os.path.join(output_directory, "result.txt"), "w", encoding="utf-8") as f:
+    output_file = os.path.join(output_directory, "part-00000")
+    with open(output_file, "w", encoding="utf-8") as f:
         for key, value in sequence:
             f.write(f"{key}\t{value}\n")
+
 
 
 def create_marker(output_directory):
