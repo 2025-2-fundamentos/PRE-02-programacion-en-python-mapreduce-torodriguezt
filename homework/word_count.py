@@ -2,6 +2,8 @@
 
 # pylint: disable=broad-exception-raised
 
+# pylint: disable=broad-exception-raised
+
 import fileinput
 import glob
 import os
@@ -9,15 +11,20 @@ import shutil
 import string
 import time
 from itertools import groupby
+
 from toolz.itertoolz import concat, pluck
 
 
-def copy_raw_files_to_input_folder(n, raw_folder="files/raw", input_folder="files/input"):
+def copy_raw_files_to_input_folder(n):
     """Generate n copies of the raw files in the input folder"""
+    raw_folder = "files/raw"
+    input_folder = "files/input"
     os.makedirs(input_folder, exist_ok=True)
+
     raw_files = glob.glob(os.path.join(raw_folder, "*"))
     if not raw_files:
         raise Exception("No raw files found in 'files/raw'")
+
     for i in range(n):
         for f in raw_files:
             shutil.copy(f, os.path.join(input_folder, f"copy_{i}_{os.path.basename(f)}"))
@@ -26,7 +33,7 @@ def copy_raw_files_to_input_folder(n, raw_folder="files/raw", input_folder="file
 def load_input(input_directory):
     """Load all lines from input files"""
     files = glob.glob(os.path.join(input_directory, "*"))
-    return fileinput.input(files)
+    return fileinput.input(files, openhook=fileinput.hook_encoded("utf-8"))
 
 
 def preprocess_line(x):
@@ -68,17 +75,16 @@ def create_directory(directory):
 
 
 def save_output(output_directory, sequence):
-    """Save results to a file"""
+    """Save results to part-00000 (test lo espera)"""
     output_file = os.path.join(output_directory, "part-00000")
     with open(output_file, "w", encoding="utf-8") as f:
         for key, value in sequence:
             f.write(f"{key}\t{value}\n")
 
 
-
 def create_marker(output_directory):
     """Create marker file to indicate job finished"""
-    with open(os.path.join(output_directory, "_SUCCESS"), "w") as f:
+    with open(os.path.join(output_directory, "_SUCCESS"), "w", encoding="utf-8") as f:
         f.write("Job completed successfully\n")
 
 
@@ -94,7 +100,9 @@ def run_job(input_directory, output_directory):
 
 
 if __name__ == "__main__":
-    copy_raw_files_to_input_folder(n=1000)  
+
+    copy_raw_files_to_input_folder(n=5)  # cuidado con 1000, genera MUCHOS archivos
+
     start_time = time.time()
 
     run_job("files/input", "files/output")
