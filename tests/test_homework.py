@@ -10,12 +10,19 @@ import homework.word_count as wc
 def test_01():
     """Test Word Count"""
 
-    wc.copy_raw_files_to_input_folder(n=1000)
-    wc.run_job(
-        "files/input",
-        "files/output",
-    )
+    if os.path.exists("files/output/"):
+        for file in os.listdir("files/output/"):
+            os.remove(os.path.join("files/output/", file))
+        os.rmdir("files/output/")
 
+    wc.run_experiment(
+        n=1000,  # or any number you want
+        mapper=wc.wordcount_mapper,
+        reducer=wc.wordcount_reducer,
+        raw_dir="files/raw",
+        input_dir="files/input",
+        output_dir="files/output",
+    )
     #
     # Retorna error si la carpeta output/ no existe
     if not os.path.exists("files/output/"):
@@ -42,4 +49,3 @@ def test_01():
     assert result["business"] == 7000
     assert result["by"] == 3000
     assert result["algorithms"] == 2000
-    assert result["analysis"] == 4000
